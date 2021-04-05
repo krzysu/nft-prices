@@ -1,0 +1,9 @@
+[build]
+command = "yarn build"
+publish = "public/"
+
+[[headers]]
+for = "/*.json"
+
+[headers.values]
+Access-Control-Allow-Origin = '*'
