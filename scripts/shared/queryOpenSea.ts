@@ -1,3 +1,4 @@
+require("dotenv").config();
 import fs from "fs";
 import { ethers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
@@ -11,6 +12,7 @@ const provider = new ethers.providers.JsonRpcProvider(
 
 const seaport = new OpenSeaPort(provider, {
   networkName: Network.Main,
+  apiKey: process.env.OPEN_SEA_API_KEY,
 });
 
 type Price = {
@@ -62,7 +64,7 @@ const formatLastSale = (event: AssetEvent): Price => {
 };
 
 const LIMIT = 50;
-const DELAY = 1100;
+const DELAY = 300;
 
 const getAssetsForPage = async (
   page: number,
