@@ -1,8 +1,8 @@
-name: Pixls
+name: Cryptovoxels
 
 on:
   schedule:
-    - cron: "0 1/12 * * *"
+    - cron: "0 3/24 * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Run script
         run: |
-          yarn script scripts/pixls.ts
+          yarn script scripts/cryptovoxels.ts
         env:
           OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
 
@@ -28,7 +28,7 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           author_name: GitActionBot
-          message: Update Pixls
+          message: Update Cryptovoxels
           branch: db
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
