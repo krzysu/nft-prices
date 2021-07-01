@@ -2,7 +2,7 @@ name: CryptoPunks
 
 on:
   schedule:
-    - cron: "0 2/12 * * *"
+    - cron: "0 6/24 * * *"
   workflow_dispatch:
 
 jobs:

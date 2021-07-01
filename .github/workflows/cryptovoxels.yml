@@ -2,7 +2,7 @@ name: Cryptovoxels
 
 on:
   schedule:
-    - cron: "0 3/12 * * *"
+    - cron: "0 2/24 * * *"
   workflow_dispatch:
 
 jobs:

@@ -1,8 +1,8 @@
-name: CryptoCorgis
+name: Ethlings
 
 on:
   schedule:
-    - cron: "0 */24 * * *"
+    - cron: "0 3/24 * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Run script
         run: |
-          yarn script scripts/corgis.ts
+          yarn script scripts/ethlings.ts
         env:
           OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
 
@@ -28,7 +28,7 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           author_name: GitActionBot
-          message: Update CryptoCorgis
+          message: Update Ethlings
           branch: db
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

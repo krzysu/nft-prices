@@ -2,7 +2,7 @@ name: Wicked Craniums
 
 on:
   schedule:
-    - cron: "0 1/3 * * *"
+    - cron: "0 1/6 * * *"
   workflow_dispatch:
 
 jobs:
