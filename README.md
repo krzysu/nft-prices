@@ -12,3 +12,4 @@ Prices are published in JSON format, consumed by NFT-Tools project.
 - Hashmasks - every 6th hour from 4:00
 - Pixls - every 24th hour from 5:00
 - Punks - every 24th hour from 6:00
+- ArtBlocks - every 6th hour from 0:30

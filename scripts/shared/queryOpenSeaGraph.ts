@@ -18,50 +18,73 @@ type AssetWithPrices = {
 
 const URL = `https://api.opensea.io/graphql/`;
 
-const buildQuery = (collection: string, cursor: string = "") => `
-  {
-    search(collections: [${collection}], after: "${cursor}", first: 100, toggles: [BUY_NOW]) {
-      edges {
-        node {
-          asset {
-            tokenId
-            name
-            assetEventData {
-              lastSale {
-                unitPriceQuantity {
-                  asset {
-                    symbol
-                    decimals
-                  }
-                  quantity
+const QUERY = `
+query searchQuery(
+  $categories: [CollectionSlug!],
+  $chains: [ChainScalar!],
+  $collections: [CollectionSlug!],
+  $count: Int,
+  $cursor: String,
+  $stringTraits: [TraitInputType!],
+  $toggles: [SearchToggle!]
+  ) {
+  search(
+    after: $cursor,
+    chains: $chains,
+    categories: $categories,
+    collections: $collections,
+    first: $count,
+    numericTraits: $numericTraits,
+    stringTraits: $stringTraits,
+    toggles: $toggles
+  ) {
+    edges {
+      node {
+        asset {
+          tokenId
+          name
+          assetEventData {
+            lastSale {
+              unitPriceQuantity {
+                asset {
+                  symbol
+                  decimals
                 }
+                quantity
               }
             }
-            orderData {
-              bestAsk {
-                paymentAssetQuantity {
-                  asset {
-                    symbol
-                    decimals
-                  }
-                  quantity
+          }
+          orderData {
+            bestAsk {
+              paymentAssetQuantity {
+                asset {
+                  symbol
+                  decimals
                 }
+                quantity
               }
             }
           }
         }
       }
-      totalCount
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
+    }
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
     }
   }
-  `;
+}
+`;
 
-const fetchCollectionForCursor = async (collection: string, cursor: string) => {
-  const query = buildQuery(collection, cursor);
+const fetchCollectionForCursor = async (vars: QueryVars, cursor: string) => {
+  const variables = {
+    cursor,
+    count: 100,
+    collections: [vars.collection],
+    stringTraits: vars.stringTraits || null,
+    toggles: vars.toggles || null,
+  };
 
   try {
     const responseRaw = await fetch(URL, {
@@ -70,7 +93,7 @@ const fetchCollectionForCursor = async (collection: string, cursor: string) => {
         "Content-Type": "application/json",
         "x-api-key": process.env.OPEN_SEA_API_KEY || "",
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query: QUERY, variables }),
     });
 
     const response = await responseRaw.json();
@@ -129,7 +152,7 @@ type PageInfo = {
 };
 
 const getAssetsWithPrices = async (
-  collection: string,
+  props: Props,
   cursor: string
 ): Promise<{
   prices: AssetWithPrices[];
@@ -137,19 +160,23 @@ const getAssetsWithPrices = async (
 }> => {
   try {
     const { edges, pageInfo } = await fetchCollectionForCursor(
-      collection,
+      props.vars,
       cursor
     );
 
     const prices = edges.map((edge: any) => {
       const asset = edge.node.asset;
 
-      if (!asset.name) {
-        console.log(asset);
+      if (!asset) {
+        return {
+          id: "",
+          offeredFor: null,
+          lastSale: null,
+        };
       }
 
       return {
-        id: asset.name?.split("#")[1] || "",
+        id: props.config.getAssetId(asset),
         offeredFor: getOfferedFor(asset),
         lastSale: getLastSale(asset),
       };
@@ -195,20 +222,11 @@ const prepareOutputFormat = (data: AssetWithPrices[]): PricesJson => {
   }, {});
 };
 
-type Props = {
-  collection: string;
-  filePath: string;
-};
-
-const singleCall = async (
-  collection: string,
-  filePath: string,
-  cursor: string
-) => {
-  const { prices, pageInfo } = await getAssetsWithPrices(collection, cursor);
+const singleCall = async (props: Props, cursor: string) => {
+  const { prices, pageInfo } = await getAssetsWithPrices(props, cursor);
   const db = prepareOutputFormat(prices);
 
-  const dbFile = fs.readFileSync(filePath, "utf8");
+  const dbFile = fs.readFileSync(props.filePath, "utf8");
   const dbData = JSON.parse(dbFile);
 
   console.log(
@@ -217,16 +235,37 @@ const singleCall = async (
     }`
   );
 
-  saveToFile({ ...dbData, ...db }, filePath);
+  saveToFile({ ...dbData, ...db }, props.filePath);
 
   return pageInfo;
 };
 
-export const queryOpenSeaGraph = async ({ collection, filePath }: Props) => {
+type Trait = {
+  name: string;
+  values: string[];
+};
+
+type QueryVars = {
+  collection: string;
+  stringTraits?: Trait[];
+  toggles?: string[];
+};
+
+type Config = {
+  getAssetId: (asset: any) => string;
+};
+
+type Props = {
+  vars: QueryVars;
+  config: Config;
+  filePath: string;
+};
+
+export const queryOpenSeaGraph = async (props: Props) => {
   let hasNextPage = false;
   let cursor = "";
   do {
-    const pageInfo = await singleCall(collection, filePath, cursor);
+    const pageInfo = await singleCall(props, cursor);
     cursor = pageInfo.endCursor;
     hasNextPage = pageInfo.hasNextPage;
   } while (hasNextPage);

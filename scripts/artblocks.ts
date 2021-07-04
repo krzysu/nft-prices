@@ -2,9 +2,10 @@ import path from "path";
 import { saveToFile } from "./shared/saveToFile";
 import { queryOpenSeaGraph } from "./shared/queryOpenSeaGraph";
 
-const DB_NAME = "../public/ethlings.json";
+const DB_NAME = "../public/artblocks.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);
-const COLLECTION = "ethlings";
+const COLLECTION = "art-blocks-factory";
+const STRING_TRAITS = [{ name: "Gravity 12", values: ["All Gravity 12s"] }];
 
 const main = async () => {
   saveToFile({}, DB_PATH);
@@ -12,10 +13,10 @@ const main = async () => {
   await queryOpenSeaGraph({
     vars: {
       collection: COLLECTION,
-      toggles: ["BUY_NOW"],
+      stringTraits: STRING_TRAITS,
     },
     config: {
-      getAssetId: (asset) => asset.name?.split("#")[1] || "",
+      getAssetId: (asset) => asset.tokenId,
     },
     filePath: DB_PATH,
   });
