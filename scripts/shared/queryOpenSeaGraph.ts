@@ -63,6 +63,7 @@ query searchQuery(
                 }
                 quantity
               }
+              orderType
             }
           }
         }
@@ -132,6 +133,12 @@ const formatPrice = (obj: PriceToFormat): Price => {
 
 const getOfferedFor = (asset: any): Price | null => {
   if (!asset.orderData.bestAsk) {
+    return null;
+  }
+
+  // BASIC, DUTCH or ENGLISH
+  // ignore english auctions
+  if (asset.orderData.bestAsk.orderType === "ENGLISH") {
     return null;
   }
 

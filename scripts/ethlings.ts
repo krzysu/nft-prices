@@ -12,7 +12,6 @@ const main = async () => {
   await queryOpenSeaGraph({
     vars: {
       collection: COLLECTION,
-      toggles: ["BUY_NOW"],
     },
     config: {
       getAssetId: (asset) => asset.name?.split("#")[1] || "",
