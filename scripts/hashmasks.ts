@@ -5,7 +5,7 @@ import { queryOpenSea } from "./shared/queryOpenSea";
 const DB_NAME = "../public/hashmasks.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);
 const CONTRACT_ADDRESS = "0xc2c747e0f7004f9e8817db2ca4997657a7746928";
-const PAGES_LENGTH = 165;
+const PAGES_LENGTH = 166;
 
 const main = async () => {
   saveToFile({}, DB_PATH);

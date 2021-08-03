@@ -99,7 +99,7 @@ const fetchCollectionForCursor = async (vars: QueryVars, cursor: string) => {
 
     const response = await responseRaw.json();
 
-    if (!response.data) {
+    if (!response.data || !response.data.search) {
       console.log(response);
     }
 
