@@ -7,7 +7,6 @@ Prices are published in JSON format, consumed by NFT-Tools project.
 
 - Corgis - every 24th hour from 0:00
 - ArtBlocks - every 24th hour from 0:30
-- ArtBlocks Playground - every 24th hour from 0:45
 - Craniums - every 6th hour from 1:00
 - Stallions - every 6th hour from 1:15
 - CryptoVoxels - every 24th hour from 2:00

@@ -82,7 +82,7 @@ const fetchCollectionForCursor = async (vars: QueryVars, cursor: string) => {
   const variables = {
     cursor,
     count: 100,
-    collections: [vars.collection],
+    collections: vars.collections,
     stringTraits: vars.stringTraits || null,
     toggles: vars.toggles || null,
   };
@@ -255,7 +255,7 @@ type Trait = {
 };
 
 type QueryVars = {
-  collection: string;
+  collections: string[];
   stringTraits?: Trait[];
   toggles?: string[];
 };
