@@ -2,7 +2,7 @@ name: Hashmasks
 
 on:
   schedule:
-    - cron: "0 4/6 * * *"
+    - cron: "0 4/12 * * *"
   workflow_dispatch:
 
 jobs:

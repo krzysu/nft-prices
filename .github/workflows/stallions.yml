@@ -2,7 +2,7 @@ name: Wicked Stallions
 
 on:
   schedule:
-    - cron: "15 1/6 * * *"
+    - cron: "15 1/24 * * *"
   workflow_dispatch:
 
 jobs:
