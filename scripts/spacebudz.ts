@@ -36,7 +36,7 @@ type Price = {
 
 const getMetaData = async (page: number): Promise<Price[]> => {
   const search = "SpaceBud";
-  const url = `https://api.stale.software/api/sold?search=${search}&sort=date&order=desc&count=500&page=${page}`;
+  const url = `https://api.cnft.io/api/sold?search=${search}&sort=date&order=desc&count=500&page=${page}`;
 
   try {
     const responseRaw = await fetch(url);
@@ -66,7 +66,7 @@ const DELAY = 200;
 
 const main = async () => {
   const responseRaw = await fetch(
-    `https://api.stale.software/api/sold?search=SpaceBud&sort=date&order=desc&count=1&page=1`
+    `https://api.cnft.io/api/sold?search=SpaceBud&sort=date&order=desc&count=1&page=1`
   );
   const response = (await responseRaw.json()) as Response;
 
