@@ -2,7 +2,7 @@ name: Spacebudz
 
 on:
   schedule:
-    - cron: "30 6/12 * * *"
+    - cron: "0 5/12 * * *"
   workflow_dispatch:
 
 jobs:
@@ -21,8 +21,6 @@ jobs:
       - name: Run script
         run: |
           yarn script scripts/spacebudz.ts
-        env:
-          OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@v7

@@ -1,8 +1,8 @@
-name: Grandmaster Adventurers
+name: Pixlton Cars
 
 on:
   schedule:
-    - cron: "30 5/12 * * *"
+    - cron: "0 8/12 * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Run script
         run: |
-          yarn script scripts/adventurers.ts
+          yarn script scripts/pixlton-cars.ts
         env:
           OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
 
@@ -28,7 +28,7 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           author_name: GitActionBot
-          message: Update Grandmaster Adventurers
+          message: Update Pixlton Cars
           branch: db
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

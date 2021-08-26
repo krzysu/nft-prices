@@ -64,7 +64,7 @@ const formatLastSale = (event: AssetEvent): Price => {
 };
 
 const LIMIT = 50;
-const DELAY = 300;
+const DELAY = 1000;
 
 const getAssetsForPage = async (
   page: number,
@@ -76,7 +76,6 @@ const getAssetsForPage = async (
       asset_contract_address: contractAddress,
       limit: LIMIT,
       offset: page * LIMIT,
-      order_by: "eth_price", // created_date or eth_price
       order_direction: order, // asc or desc
     });
 

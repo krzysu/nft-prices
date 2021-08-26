@@ -2,10 +2,10 @@ import path from "path";
 import { saveToFile } from "./shared/saveToFile";
 import { queryOpenSea } from "./shared/queryOpenSea";
 
-const DB_NAME = "../public/stallions.json";
+const DB_NAME = "../public/pixlton-cars.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);
-const CONTRACT_ADDRESS = "0x45d8f7db9b437efbc74ba6a945a81aaf62dceda7";
-const PAGES_LENGTH = 197; // not more than 200
+const CONTRACT_ADDRESS = "0x584292974026978586c3007b5a15b69118130bbb";
+const PAGES_LENGTH = 110; // 5470 / 50
 
 const main = async () => {
   saveToFile({}, DB_PATH);
