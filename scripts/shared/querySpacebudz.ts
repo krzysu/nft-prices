@@ -48,7 +48,7 @@ const getMetaData = async (id: string): Promise<Price | undefined> => {
   }
 };
 
-const DELAY = 500;
+const DELAY = 100;
 
 type Props = {
   filePath: string;
@@ -58,9 +58,8 @@ export const querySpacebudz = async ({ filePath }: Props) => {
   const IDS = Array.from({ length: 10000 }, (_, i) => i.toString());
 
   const pricesOrNot = await Promise.all(
-    IDS.slice(0, 100).map(async (id, index) => {
+    IDS.map(async (id, index) => {
       await sleep(DELAY * index);
-
       console.log(`Getting assets, item id ${id}`);
       return await getMetaData(id);
     })
