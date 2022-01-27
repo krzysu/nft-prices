@@ -5,17 +5,21 @@ type MinPrices = [Offered, LastSale];
 
 export type PricesJson = Record<ItemId, MinPrices>;
 
-type Price = {
+export type DbPrice = {
   price: number;
   symbol: string;
 };
 
-type Marketplace = "opensea" | "rarible";
+export enum Marketplace {
+  OpenSea = "opensea",
+  LooksRare = "looksrare",
+  CryptoPunks = "cryptopunks",
+}
 
-export type DbItem = {
+export type DbPricedItem = {
   address: string;
   tokenId: string;
   marketplace: Marketplace;
-  lastSale?: Price;
-  offered?: Price;
+  lastSale?: DbPrice;
+  offered?: DbPrice;
 };

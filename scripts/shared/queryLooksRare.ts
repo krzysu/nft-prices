@@ -1,28 +1,16 @@
 import fetch from "node-fetch";
-import fs from "fs";
 import { ethers } from "ethers";
-import { saveToFile } from "./saveToFile";
-import { PricesJson } from "./types";
-
-type Price = {
-  price: number;
-  symbol: string;
-};
-
-type AssetWithPrices = {
-  id: string;
-  offeredFor: Price | null;
-  lastSale: Price | null;
-};
+import { DbPrice, DbPricedItem, Marketplace } from "./types";
 
 type LooksRareOrder = {
   price: string;
-  currency: string; // "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+  currency: string;
 };
 
 type LooksRareToken = {
   id: string; // cursor
   tokenId: string;
+  collection: { address: string };
   lastOrder: LooksRareOrder;
   ask: LooksRareOrder;
   bids: LooksRareOrder[];
@@ -39,6 +27,9 @@ query GetTokens(
   tokens(filter: $filter, pagination: $pagination, sort: $sort) {
     id
     tokenId
+    collection {
+      address
+    }
     lastOrder {
       price
       currency
@@ -64,7 +55,10 @@ const fetchCollectionForCursor = async (
   cursor: string
 ): Promise<LooksRareToken[]> => {
   const variables = {
-    filter: { collection: collectionAddress, withAskOnly: true },
+    filter: {
+      collection: collectionAddress,
+      withAskOnly: true,
+    },
     pagination: { first: 25, cursor },
     sort: "PRICE_ASC",
   };
@@ -80,6 +74,10 @@ const fetchCollectionForCursor = async (
 
     const response = await responseRaw.json();
 
+    if (!response.data || !response.data.tokens) {
+      console.log(response);
+    }
+
     return response.data.tokens;
   } catch (e) {
     console.log(e);
@@ -88,7 +86,7 @@ const fetchCollectionForCursor = async (
   return [];
 };
 
-const formatPrice = (obj: LooksRareOrder): Price => {
+const formatPrice = (obj: LooksRareOrder): DbPrice => {
   const decimals = 18;
   const price = Number(
     Number(ethers.utils.formatUnits(obj.price || "0", decimals)).toFixed(4)
@@ -103,17 +101,17 @@ const formatPrice = (obj: LooksRareOrder): Price => {
   };
 };
 
-const getOfferedFor = (asset: LooksRareToken): Price | null => {
+const getOfferedPrice = (asset: LooksRareToken): DbPrice | undefined => {
   if (!asset.ask) {
-    return null;
+    return undefined;
   }
 
   return formatPrice(asset.ask);
 };
 
-const getLastSale = (asset: LooksRareToken): Price | null => {
+const getLastSalePrice = (asset: LooksRareToken): DbPrice | undefined => {
   if (!asset.lastOrder) {
-    return null;
+    return undefined;
   }
 
   return formatPrice(asset.lastOrder);
@@ -128,32 +126,37 @@ const getAssetsWithPrices = async (
   collectionAddress: string,
   cursor: string
 ): Promise<{
-  prices: AssetWithPrices[];
+  pricedItems: DbPricedItem[];
   pageInfo: PageInfo;
 }> => {
+  const emptyReturn = {
+    pricedItems: [],
+    pageInfo: {
+      endCursor: "",
+      hasNextPage: false,
+    },
+  };
   try {
     const tokens = await fetchCollectionForCursor(collectionAddress, cursor);
 
     if (tokens.length === 0) {
-      return {
-        prices: [],
-        pageInfo: {
-          endCursor: "",
-          hasNextPage: false,
-        },
-      };
+      return emptyReturn;
     }
 
-    const prices = tokens.map((token) => {
-      return {
-        id: token.tokenId,
-        offeredFor: getOfferedFor(token),
-        lastSale: getLastSale(token),
-      };
-    });
+    const pricedItems = tokens
+      .map((token) => {
+        return {
+          tokenId: token.tokenId,
+          address: collectionAddress,
+          marketplace: Marketplace.LooksRare,
+          offered: getOfferedPrice(token),
+          lastSale: getLastSalePrice(token),
+        };
+      })
+      .filter((item) => !!item.offered || !!item.lastSale);
 
     return {
-      prices,
+      pricedItems,
       pageInfo: {
         endCursor: tokens[tokens.length - 1]?.id || "",
         hasNextPage: true,
@@ -161,57 +164,23 @@ const getAssetsWithPrices = async (
     };
   } catch (e) {
     console.error(e);
-    return {
-      prices: [],
-      pageInfo: {
-        endCursor: "",
-        hasNextPage: false,
-      },
-    };
+    return emptyReturn;
   }
 };
 
-const allowedSymbols = ["ETH", "WETH"];
-
-const prepareOutputFormat = (data: AssetWithPrices[]): PricesJson => {
-  return data.reduce((acc, { id, offeredFor, lastSale }): PricesJson => {
-    if (!offeredFor && !lastSale) return acc;
-
-    const result = [];
-    result.push(
-      offeredFor && allowedSymbols.includes(offeredFor.symbol)
-        ? offeredFor.price
-        : 0
-    );
-
-    result.push(
-      lastSale && allowedSymbols.includes(lastSale.symbol) ? lastSale.price : 0
-    );
-
-    return {
-      ...acc,
-      [id]: result,
-    };
-  }, {});
-};
-
 const singleCall = async (props: Props, cursor: string) => {
-  const { prices, pageInfo } = await getAssetsWithPrices(
+  const { pricedItems, pageInfo } = await getAssetsWithPrices(
     props.collectionAddress,
     cursor
   );
-  const db = prepareOutputFormat(prices);
 
-  const dbFile = fs.readFileSync(props.filePath, "utf8");
-  const dbData = JSON.parse(dbFile);
-
-  console.log(
-    `Existing records: ${Object.keys(dbData).length}, New records ${
-      Object.keys(db).length
-    }`
-  );
-
-  saveToFile({ ...dbData, ...db }, props.filePath);
+  if (pricedItems.length > 0) {
+    try {
+      await props.saveItems(pricedItems);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   return pageInfo;
 };
@@ -222,17 +191,18 @@ const sleep = (ms: number) => {
   });
 };
 
-const DELAY = 300;
+const DELAY = 500;
 
 type Props = {
   collectionAddress: string;
-  filePath: string;
+  saveItems: (items: DbPricedItem[]) => Promise<void>;
 };
 
 export const queryLooksRare = async (props: Props) => {
   let hasNextPage = false;
   let cursor = "";
   do {
+    console.log(`LooksRare: getting assets, cursor ${cursor}`);
     const pageInfo = await singleCall(props, cursor);
     cursor = pageInfo.endCursor;
     hasNextPage = pageInfo.hasNextPage;
