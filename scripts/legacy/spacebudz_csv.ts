@@ -1,8 +1,8 @@
 import path from "path";
 import fs from "fs";
 import parse from "csv-parse/lib/sync";
-import { saveToFile } from "./shared/saveToFile";
-import { PricesJson } from "./shared/types";
+import { saveToFile } from "../shared/saveToFile";
+import { PricesJson } from "../shared/types";
 
 const DB_NAME = "../public/spacebudz.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);

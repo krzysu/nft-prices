@@ -1,0 +1,25 @@
+name: Prices DB
+
+on:
+  schedule:
+    # every 6th hour
+    - cron: "30 */3 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          yarn
+
+      - name: Run script
+        run: |
+          yarn script scripts/_prices.ts
+        env:
+          OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
+          DATABASE_ENDPOINT: ${{secrets.DATABASE_ENDPOINT}}

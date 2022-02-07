@@ -1,6 +1,6 @@
 import path from "path";
-import { saveToFile } from "./shared/saveToFile";
-import { queryOpenSeaGraph } from "./shared/queryOpenSeaGraph";
+import { saveToFile } from "../shared/saveToFile";
+import { queryOpenSeaGraph } from "../shared/queryOpenSeaGraph";
 
 const DB_NAME = "../public/ethlings.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);

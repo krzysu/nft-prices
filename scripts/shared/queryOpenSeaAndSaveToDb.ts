@@ -119,9 +119,9 @@ export const queryOpenSeaAndSaveToDb = async ({
     PAGES.map(async (page, index) => {
       await sleep(DELAY * index);
 
-      console.log(
-        `OpenSea: getting assets, page ${page}, order direction ${order}`
-      );
+      // console.log(
+      //   `OpenSea: getting assets, page ${page}, order direction ${order}`
+      // );
       await getAssetsForPage(page, order, collectionAddress, saveItems);
     })
   );

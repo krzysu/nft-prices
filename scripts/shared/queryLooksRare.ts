@@ -202,7 +202,7 @@ export const queryLooksRare = async (props: Props) => {
   let hasNextPage = false;
   let cursor = "";
   do {
-    console.log(`LooksRare: getting assets, cursor ${cursor}`);
+    // console.log(`LooksRare: getting assets, cursor ${cursor}`);
     const pageInfo = await singleCall(props, cursor);
     cursor = pageInfo.endCursor;
     hasNextPage = pageInfo.hasNextPage;

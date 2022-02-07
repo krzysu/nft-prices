@@ -4,7 +4,7 @@ import { DbPricedItem } from "./types";
 
 const pricedItemSchema = new mongoose.Schema({
   address: { type: String, index: true, required: true },
-  tokenId: { type: String, index: true, required: true },
+  tokenId: { type: String, required: true },
   marketplace: String,
   lastSale: { price: Number, symbol: String },
   offered: { price: Number, symbol: String },
@@ -22,7 +22,7 @@ export const disconnectDb = async () => {
 
 export const saveToDb = async (items: DbPricedItem[]) => {
   await PricedItem.insertMany(items);
-  console.log(`Saved ${items.length} new items to the database`);
+  // console.log(`Saved ${items.length} new items to the database`);
 };
 
 export const removeAllFromDb = async (address: string) => {

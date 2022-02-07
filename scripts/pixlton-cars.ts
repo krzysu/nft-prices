@@ -5,7 +5,7 @@ import { queryOpenSea } from "./shared/queryOpenSea";
 const DB_NAME = "../public/pixlton-cars.json";
 const DB_PATH = path.resolve(__dirname, DB_NAME);
 const CONTRACT_ADDRESS = "0x584292974026978586c3007b5a15b69118130bbb";
-const PAGES_LENGTH = 110; // 5470 / 50
+const PAGES_LENGTH = 82; // 4006 / 5
 
 const main = async () => {
   saveToFile({}, DB_PATH);
