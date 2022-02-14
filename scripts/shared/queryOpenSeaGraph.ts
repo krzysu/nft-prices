@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config";
 import fetch from "node-fetch";
 import fs from "fs";
 import { ethers } from "ethers";

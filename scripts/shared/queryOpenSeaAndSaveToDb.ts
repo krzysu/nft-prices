@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config";
 import { ethers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
 import { AssetEvent, OpenSeaAsset, Order } from "opensea-js/lib/types";

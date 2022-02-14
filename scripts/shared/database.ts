@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config";
 import mongoose from "mongoose";
 import { DbPricedItem } from "./types";
 
@@ -22,7 +22,7 @@ export const disconnectDb = async () => {
 
 export const saveToDb = async (items: DbPricedItem[]) => {
   await PricedItem.insertMany(items);
-  // console.log(`Saved ${items.length} new items to the database`);
+  console.log(`Saved ${items.length} new items to the database`);
 };
 
 export const removeAllFromDb = async (address: string) => {

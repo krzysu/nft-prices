@@ -1,4 +1,4 @@
-require("dotenv").config();
+import "dotenv/config";
 import fs from "fs";
 import { ethers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
