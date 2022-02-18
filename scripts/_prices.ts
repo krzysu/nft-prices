@@ -15,11 +15,11 @@ type Collection = {
 };
 
 const collections: Collection[] = [
-  {
-    name: "The Wicked Craniums",
-    contractAddress: "0x85f740958906b317de6ed79663012859067e745b".toLowerCase(),
-    totalSupply: 10762,
-  },
+  // {
+  //   name: "The Wicked Craniums",
+  //   contractAddress: "0x85f740958906b317de6ed79663012859067e745b".toLowerCase(),
+  //   totalSupply: 10762,
+  // },
   {
     name: "Pixlton Car Club",
     contractAddress: "0x584292974026978586c3007b5a15b69118130bbb".toLowerCase(),
@@ -30,11 +30,11 @@ const collections: Collection[] = [
     contractAddress: "0x082903f4e94c5e10A2B116a4284940a36AFAEd63".toLowerCase(),
     totalSupply: 5471,
   },
-  {
-    name: "Hashmasks",
-    contractAddress: "0xc2c747e0f7004f9e8817db2ca4997657a7746928".toLowerCase(),
-    totalSupply: 16384,
-  },
+  // {
+  //   name: "Hashmasks",
+  //   contractAddress: "0xc2c747e0f7004f9e8817db2ca4997657a7746928".toLowerCase(),
+  //   totalSupply: 16384,
+  // },
 ];
 
 const OS_PAGE_LIMIT = 50;
