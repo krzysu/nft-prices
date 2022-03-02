@@ -1,8 +1,10 @@
+import "dotenv/config";
 import path from "path";
-import scrapeIt from "scrape-it";
-import numbro from "numbro";
+import { ethers } from "ethers";
+import { providers } from "@0xsequence/multicall";
 import { saveToFile } from "./shared/saveToFile";
 import { PricesJson } from "./shared/types";
+import abi from "./abi/CryptoPunksMarket.json";
 import _pricesDB from "../public/punks.json";
 
 const pricesDB = _pricesDB as Record<string, number[]>;
@@ -16,105 +18,49 @@ type Price = {
   offerEth?: number;
 };
 
-type ScrappedSale = {
-  punkId: string;
-  price: string;
-};
-
-type SalesData = {
-  sales: ScrappedSale[];
-};
-
-type OffersData = {
-  offers: {
-    title: string;
-  }[];
-};
-
-const buildLastSale = (scrappedData: ScrappedSale): Price => {
-  const id = scrappedData.punkId.split(" ")[1].slice(1);
-  const value = scrappedData.price.split("\n")[0].replace("Ξ", "");
-
-  return {
-    id,
-    saleEth: numbro.unformat(value.toLowerCase()),
-  };
-};
-
-const scrapeRecentSales = async (): Promise<Price[]> => {
-  try {
-    const { data, response } = await scrapeIt(
-      `https://www.larvalabs.com/cryptopunks/sales?perPage=1000&page=1`,
-      {
-        sales: {
-          listItem: ".punk-image-container-dense",
-          data: {
-            punkId: {
-              selector: "a",
-              attr: "title",
-            },
-            price: {
-              selector: ".punk-image-text-dense",
-            },
-          },
-        },
-      }
-    );
-
-    if (response.statusCode == 200) {
-      return (data as SalesData).sales.map((i) => buildLastSale(i));
-    } else {
-      console.log(`Error ${response.statusCode}`);
-    }
-  } catch (e) {
-    console.log(`Error ${e.message}`);
-  }
-
-  return [];
-};
-
-const buildOffer = (scrappedTitle: string): Price => {
-  const parts = scrappedTitle.split(" ");
-  const value = parts[4].replace(/,/gi, "");
-
-  return {
-    id: parts[1].slice(1),
-    offerEth: Number(value),
-  };
-};
+const CRYPTO_PUNKS_ADDRESS = "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb";
+const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 const scrapeOffers = async (): Promise<Price[]> => {
-  try {
-    const { data, response } = await scrapeIt(
-      `https://www.larvalabs.com/cryptopunks/forsale`,
-      {
-        offers: {
-          listItem: ".punk-image-container-dense",
-          data: {
-            title: {
-              selector: "a",
-              attr: "title",
-            },
-          },
-        },
+  const provider = new providers.MulticallProvider(
+    new ethers.providers.JsonRpcProvider(
+      `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`
+    )
+  );
+  const contract = new ethers.Contract(CRYPTO_PUNKS_ADDRESS, abi, provider);
+
+  const ALL_ITEM_IDS = [...Array(10000).keys()].map((i) => i.toString());
+  const contractCalls = ALL_ITEM_IDS.map((i) =>
+    contract.punksOfferedForSale(i)
+  );
+  const results = await Promise.all(contractCalls);
+
+  const prices = results
+    .map((result) => {
+      const punkId = result[1];
+      const offerValue = result[3];
+      const onlySellTo = result[4];
+      const isForSale = result[0] && onlySellTo === NULL_ADDRESS;
+
+      if (isForSale) {
+        return {
+          id: punkId.toString(),
+          offerEth: Number(
+            Number(ethers.utils.formatUnits(offerValue, 18)).toFixed(4)
+          ),
+        };
       }
-    );
 
-    if (response.statusCode == 200) {
-      return (data as OffersData).offers.map((i) => buildOffer(i.title));
-    } else {
-      console.log(`Error ${response.statusCode}`);
-    }
-  } catch (e) {
-    console.log(`Error ${e.message}`);
-  }
+      return;
+    })
+    .filter((i) => !!i);
 
-  return [];
+  return prices as Price[];
 };
 
 const main = async () => {
   const offers = await scrapeOffers();
-  const sales = await scrapeRecentSales();
+  const sales = [] as Price[]; // no access to sales data
 
   // convert stored sale prices to Price object
   const storedLastSales = Object.keys(pricesDB)
