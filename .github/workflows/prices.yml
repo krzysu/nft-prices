@@ -2,8 +2,8 @@ name: Prices DB
 
 on:
   schedule:
-    # every 6th hour
-    - cron: "30 */3 * * *"
+    # every hour
+    - cron: "30 */1 * * *"
   workflow_dispatch:
 
 jobs:

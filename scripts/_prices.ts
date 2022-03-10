@@ -53,12 +53,12 @@ const getPricesForCollection = async (collection: Collection) => {
       collectionAddress: collection.contractAddress,
       saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
     }),
-    queryOpenSeaAndSaveToDb({
-      collectionAddress: collection.contractAddress,
-      order: "asc",
-      totalPages: requiresExtraOpenSeaRound ? halfOsPagesLength : osPagesLength,
-      saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
-    }),
+    // queryOpenSeaAndSaveToDb({
+    //   collectionAddress: collection.contractAddress,
+    //   order: "asc",
+    //   totalPages: requiresExtraOpenSeaRound ? halfOsPagesLength : osPagesLength,
+    //   saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
+    // }),
   ]);
 
   if (requiresExtraOpenSeaRound) {
