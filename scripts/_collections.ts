@@ -35,4 +35,9 @@ export const collections: Collection[] = [
     contractAddress: "0x7592e2f251a7f7da27211625d652092769f43a60".toLowerCase(),
     totalSupply: 6580,
   },
+  {
+    name: "Crypto Corgis",
+    contractAddress: "0x51e613727fdd2e0B91b51c3E5427E9440a7957E4".toLowerCase(),
+    totalSupply: 10000,
+  },
 ];
