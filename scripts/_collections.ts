@@ -29,4 +29,8 @@ export const collections: Collection[] = [
     "Bored Ape Yacht Club",
     "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
   ),
+  buildCollection(
+    "Dusk by GEN.ART",
+    "0xdc1b41492db3b485914d92a2e2cfa35fd93fc8ca"
+  ),
 ];
