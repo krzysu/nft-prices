@@ -23,7 +23,7 @@ type Props = {
 
 export const queryModulePrices = async (props: Props) => {
   try {
-    const url = `https://api.modulenft.xyz/api/v1/opensea/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
+    const url = `https://api.modulenft.xyz/api/v1/opensea/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
     const responseRaw = await fetch(url);
     const response = (await responseRaw.json()) as Response;
 
