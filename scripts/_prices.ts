@@ -15,10 +15,10 @@ const getPricesForCollection = async (collection: Collection) => {
   await removeAllFromDb(collection.contractAddress);
 
   await Promise.allSettled([
-    queryLooksRare({
-      collectionAddress: collection.contractAddress,
-      saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
-    }),
+    // queryLooksRare({
+    //   collectionAddress: collection.contractAddress,
+    //   saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
+    // }),
     queryModulePrices({
       collectionAddress: collection.contractAddress,
       saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
