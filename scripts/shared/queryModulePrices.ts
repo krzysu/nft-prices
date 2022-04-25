@@ -21,7 +21,7 @@ type Props = {
   saveItems: (items: DbPricedItem[]) => Promise<void>;
 };
 
-export const queryModulePrices = async (props: Props) => {
+const queryOpenSea = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/opensea/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
     const responseRaw = await fetch(url);
@@ -53,4 +53,43 @@ export const queryModulePrices = async (props: Props) => {
   } catch (e) {
     console.error(e);
   }
+};
+
+const queryLooksRare = async (props: Props) => {
+  try {
+    const url = `https://api.modulenft.xyz/api/v1/looksrare/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
+    const responseRaw = await fetch(url);
+    const response = (await responseRaw.json()) as Response;
+
+    if (response.error) {
+      return [];
+    }
+
+    const pricedItems = response.listings.map((listing) => {
+      return {
+        tokenId: listing.tokenId,
+        address: props.collectionAddress,
+        marketplace: Marketplace.LooksRare,
+        offered: {
+          price: Number(listing.price),
+          symbol: "ETH",
+        },
+      };
+    });
+
+    if (pricedItems.length > 0) {
+      try {
+        await props.saveItems(pricedItems);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const queryModulePrices = async (props: Props) => {
+  await queryOpenSea(props);
+  await queryLooksRare(props);
 };
