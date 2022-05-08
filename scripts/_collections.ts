@@ -31,4 +31,15 @@ export const collections: Collection[] = [
   buildCollection("Azuki", "0xED5AF388653567Af2F388E6224dC7C4b3241C544"),
   buildCollection("Arcade Land", "0x4a8c9d751eeabc5521a68fb080dd7e72e46462af"),
   buildCollection("Hashmasks", "0xc2c747e0f7004f9e8817db2ca4997657a7746928"),
+
+  // art blocks
+  buildCollection("AB", "unigrids-by-zeblocks"),
+  buildCollection("AB", "ringers-by-dmitri-cherniak"),
+  buildCollection("AB", "archetype-by-kjetil-golid"),
+  buildCollection("AB", "paper-armada-by-kjetil-golid"),
+  buildCollection("AB", "algobots-by-stina-jones"),
+  buildCollection("AB", "subscapes-by-matt-deslauriers"),
+  buildCollection("AB", "algorhythms-by-han-x-nicolas-daniel"),
+  buildCollection("AB", "fidenza-by-tyler-hobbs"),
+  buildCollection("AB", "gravity-12-by-jimmy-herdberg"),
 ];
