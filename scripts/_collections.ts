@@ -1,11 +1,17 @@
 export type Collection = {
   name: string;
   contractAddress: string;
+  skipLooksRare?: boolean;
 };
 
-const buildCollection = (name: string, address: string): Collection => ({
+const buildCollection = (
+  name: string,
+  address: string,
+  skipLooksRare?: boolean
+): Collection => ({
   name,
   contractAddress: address.toLowerCase(),
+  skipLooksRare,
 });
 
 export const collections: Collection[] = [
@@ -33,13 +39,13 @@ export const collections: Collection[] = [
   buildCollection("Hashmasks", "0xc2c747e0f7004f9e8817db2ca4997657a7746928"),
 
   // art blocks
-  buildCollection("AB", "unigrids-by-zeblocks"),
-  buildCollection("AB", "ringers-by-dmitri-cherniak"),
-  buildCollection("AB", "archetype-by-kjetil-golid"),
-  buildCollection("AB", "paper-armada-by-kjetil-golid"),
-  buildCollection("AB", "algobots-by-stina-jones"),
-  buildCollection("AB", "subscapes-by-matt-deslauriers"),
-  buildCollection("AB", "algorhythms-by-han-x-nicolas-daniel"),
-  buildCollection("AB", "fidenza-by-tyler-hobbs"),
-  buildCollection("AB", "gravity-12-by-jimmy-herdberg"),
+  buildCollection("AB", "unigrids-by-zeblocks", true),
+  buildCollection("AB", "ringers-by-dmitri-cherniak", true),
+  buildCollection("AB", "archetype-by-kjetil-golid", true),
+  buildCollection("AB", "paper-armada-by-kjetil-golid", true),
+  buildCollection("AB", "algobots-by-stina-jones", true),
+  buildCollection("AB", "subscapes-by-matt-deslauriers", true),
+  buildCollection("AB", "algorhythms-by-han-x-nicolas-daniel", true),
+  buildCollection("AB", "fidenza-by-tyler-hobbs", true),
+  buildCollection("AB", "gravity-12-by-jimmy-herdberg", true),
 ];

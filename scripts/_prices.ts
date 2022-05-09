@@ -4,7 +4,10 @@ import {
   removeAllFromDb,
   saveToDb,
 } from "./shared/database";
-import { queryModulePrices } from "./shared/queryModulePrices";
+import {
+  queryLooksRarePrices,
+  queryOpenSeaPrices,
+} from "./shared/queryModulePrices";
 import { DbPricedItem } from "./shared/types";
 import { Collection, collections } from "./_collections";
 
@@ -13,12 +16,17 @@ const getPricesForCollection = async (collection: Collection) => {
   console.log(`------------------\n`);
   await removeAllFromDb(collection.contractAddress);
 
-  await Promise.allSettled([
-    queryModulePrices({
+  await queryOpenSeaPrices({
+    collectionAddress: collection.contractAddress,
+    saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
+  });
+
+  if (!collection.skipLooksRare) {
+    await queryLooksRarePrices({
       collectionAddress: collection.contractAddress,
       saveItems: async (items: DbPricedItem[]) => await saveToDb(items),
-    }),
-  ]);
+    });
+  }
 };
 
 const main = async () => {

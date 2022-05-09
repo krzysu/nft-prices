@@ -21,7 +21,7 @@ type Props = {
   saveItems: (items: DbPricedItem[]) => Promise<void>;
 };
 
-const queryOpenSea = async (props: Props) => {
+export const queryOpenSeaPrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/opensea/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
     const responseRaw = await fetch(url);
@@ -55,7 +55,7 @@ const queryOpenSea = async (props: Props) => {
   }
 };
 
-const queryLooksRare = async (props: Props) => {
+export const queryLooksRarePrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/looksrare/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
     const responseRaw = await fetch(url);
@@ -87,9 +87,4 @@ const queryLooksRare = async (props: Props) => {
   } catch (e) {
     console.error(e);
   }
-};
-
-export const queryModulePrices = async (props: Props) => {
-  await queryOpenSea(props);
-  await queryLooksRare(props);
 };
