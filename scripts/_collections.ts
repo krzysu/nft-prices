@@ -34,7 +34,7 @@ export const collections: Collection[] = [
     "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"
   ),
   buildCollection("Moonbirds", "0x23581767a106ae21c074b2276D25e5C3e136a68b"),
-  buildCollection("Azuki", "0xED5AF388653567Af2F388E6224dC7C4b3241C544"),
+  buildCollection("Kiwami", "0x701a038af4bd0fc9b69a829ddcb2f61185a49568"),
   buildCollection("Arcade Land", "0x4a8c9d751eeabc5521a68fb080dd7e72e46462af"),
   buildCollection("Hashmasks", "0xc2c747e0f7004f9e8817db2ca4997657a7746928"),
 
