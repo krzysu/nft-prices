@@ -21,14 +21,18 @@ type Props = {
   saveItems: (items: DbPricedItem[]) => Promise<void>;
 };
 
+const TIMEOUT = 120 * 1000;
+
 export const queryOpenSeaPrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/opensea/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
-    const responseRaw = await fetch(url);
+    const responseRaw = await fetch(url, {
+      timeout: TIMEOUT,
+    });
     const response = (await responseRaw.json()) as Response;
 
     if (response.error) {
-      return [];
+      return;
     }
 
     const pricedItems = response.listings.map((listing) => {
@@ -58,11 +62,13 @@ export const queryOpenSeaPrices = async (props: Props) => {
 export const queryLooksRarePrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/looksrare/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
-    const responseRaw = await fetch(url);
+    const responseRaw = await fetch(url, {
+      timeout: TIMEOUT,
+    });
     const response = (await responseRaw.json()) as Response;
 
     if (response.error) {
-      return [];
+      return;
     }
 
     const pricedItems = response.listings.map((listing) => {
