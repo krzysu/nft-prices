@@ -24,7 +24,7 @@ export const collections: Collection[] = [
     "The Wicked Craniums",
     "0x85f740958906b317de6ed79663012859067e745b"
   ),
-  buildCollection("Blitnauts", "0x448f3219cf2a23b0527a7a0158e7264b87f635db"),
+  // buildCollection("Blitnauts", "0x448f3219cf2a23b0527a7a0158e7264b87f635db"),
   buildCollection(
     "Crypto Corgis",
     "0x51e613727fdd2e0B91b51c3E5427E9440a7957E4"
@@ -35,8 +35,9 @@ export const collections: Collection[] = [
   ),
   buildCollection("Moonbirds", "0x23581767a106ae21c074b2276D25e5C3e136a68b"),
   buildCollection("Kiwami", "0x701a038af4bd0fc9b69a829ddcb2f61185a49568"),
-  buildCollection("Arcade Land", "0x4a8c9d751eeabc5521a68fb080dd7e72e46462af"),
-  buildCollection("Hashmasks", "0xc2c747e0f7004f9e8817db2ca4997657a7746928"),
+  buildCollection("Bulls", "0x3a8778a58993ba4b941f85684d74750043a4bb5f"),
+  // buildCollection("Arcade Land", "0x4a8c9d751eeabc5521a68fb080dd7e72e46462af"),
+  // buildCollection("Hashmasks", "0xc2c747e0f7004f9e8817db2ca4997657a7746928"),
 
   // art blocks
   buildCollection("AB", "unigrids-by-zeblocks", true),
