@@ -23,13 +23,21 @@ type Props = {
 
 const TIMEOUT = 120 * 1000;
 
+const fetchFromModule = async (url: string) => {
+  const responseRaw = await fetch(url, {
+    timeout: TIMEOUT,
+    headers: {
+      "X-API-KEY": process.env.MODULE_API_KEY || "",
+    },
+  });
+  const response = (await responseRaw.json()) as Response;
+  return response;
+};
+
 export const queryOpenSeaPrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/opensea/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
-    const responseRaw = await fetch(url, {
-      timeout: TIMEOUT,
-    });
-    const response = (await responseRaw.json()) as Response;
+    const response = await fetchFromModule(url);
 
     if (response.error) {
       return;
@@ -62,10 +70,7 @@ export const queryOpenSeaPrices = async (props: Props) => {
 export const queryLooksRarePrices = async (props: Props) => {
   try {
     const url = `https://api.modulenft.xyz/api/v1/looksrare/listings/listings?type=${props.collectionAddress}&currencySymbol=ETH`;
-    const responseRaw = await fetch(url, {
-      timeout: TIMEOUT,
-    });
-    const response = (await responseRaw.json()) as Response;
+    const response = await fetchFromModule(url);
 
     if (response.error) {
       return;

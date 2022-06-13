@@ -21,5 +21,5 @@ jobs:
         run: |
           yarn script scripts/_prices.ts
         env:
-          OPEN_SEA_API_KEY: ${{secrets.OPEN_SEA_API_KEY}}
+          MODULE_API_KEY: ${{secrets.MODULE_API_KEY}}
           DATABASE_ENDPOINT: ${{secrets.DATABASE_ENDPOINT}}
