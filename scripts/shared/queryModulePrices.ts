@@ -21,7 +21,7 @@ type Props = {
   saveItems: (items: DbPricedItem[]) => Promise<void>;
 };
 
-const TIMEOUT = 120 * 1000;
+const TIMEOUT = 60 * 1000;
 
 const fetchFromModule = async (url: string) => {
   const responseRaw = await fetch(url, {
